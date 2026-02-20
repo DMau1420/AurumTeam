@@ -25,8 +25,8 @@ class BoomeVM:
 
         # Crear el mapa 5 X 10
         self.Mapa = [
-            ["0", "0", "1", "0", "2", "0", "0", "0", "0", "0"],
-            ["1", "2", "0", "0", "1", "0", "0", "2", "0", "0"],
+            ["0", "2", "1", "0", "2", "0", "0", "0", "0", "0"],
+            ["2", "2", "0", "0", "1", "0", "0", "2", "0", "0"],
             ["0", "0", "0", "0", "0", "0", "1", "0", "0", "0"],
             ["0", "1", "0", "2", "0", "0", "0", "0", "0", "0"],
             ["0", "0", "0", "0", "0", "2", "0", "1", "0", "0"]
@@ -66,32 +66,67 @@ class BoomeVM:
     def movIzquierda(self):
 
         self.Columna = self.Columna -1
+
+        self.detectar_bomba()
+
         if self.Columna  < 0:
+            print("Boome se ha salido del mapa")
             self.Vivo = False
             self.Columna = self.Columna + 1
+
+        if  self.Mapa[self.Fila][self.Columna]== self.obstaculo:
+            self.Vivo = False
+            print("Boome se ha estrellado")
 
 
     def movDerecha(self):
 
         self.Columna = self.Columna + 1
+
+        self.detectar_bomba()
+
         if self.Columna  >= len(self.Mapa[self.Fila]):
+            print("Boome se ha salido del mapa")
             self.Vivo = False
             self.Columna = self.Columna - 1
+
+        if  self.Mapa[self.Fila][self.Columna] == self.obstaculo:
+            self.Vivo = False
+            print("Boome se ha estrellado")
 
     def movArriba(self):
 
         self.Fila = self.Fila -1
+
+        self.detectar_bomba()
+
         if self.Fila  < 0:
+            print("Boome se ha salido del mapa")
             self.Vivo = False
             self.Fila = self.Fila + 1
 
+        if  self.Mapa[self.Fila][self.Columna]== self.obstaculo:
+            self.Vivo = False
+            print("Boome se ha estrellado")
+
     def movAbajo(self):
         self.Fila = self.Fila + 1
+        self.detectar_bomba()
+
         if self.Fila  >= len(self.Mapa):
+            print("Boome se ha salido del mapa")
             self.Vivo = False
             self.Fila = self.Fila - 1
 
+        if  self.Mapa[self.Fila][self.Columna]== self.obstaculo:
+            self.Vivo = False
+            print("Boome se ha estrellado")
+
+
     def leer_sensor(self,direccion):
+
+
+        # Retorna: 0 = No hay nada, 1 = Hay obstáculo o bomba"""
 
         # Obtener la posición ACTUAL del robot
         fila,col = self.Fila, self.Columna
@@ -105,10 +140,10 @@ class BoomeVM:
             col += 1
 
         elif direccion == "dw":
-            fila -= 1
+            fila += 1
 
         elif direccion == "up":
-            fila += 1
+            fila -= 1
 
         # VERIFICAR que la nueva posición está DENTRO del mapa
 
@@ -116,13 +151,18 @@ class BoomeVM:
 
             valor = int(self.Mapa[fila][col])
 
-            if valor == 1:
-                print("PELIGRO OBSTACULO DETECTADO ")
+            if valor == "0":
+                print(f"Sensor {direccion}: Vacío (0)")
+                return 0
+            elif valor == self.obstaculo:
+                print(f"Sensor {direccion}: Hay algo aqui")
+                return 1
+            elif valor == self.bomba:
+                print(f"Sensor {direccion}: Hay algo aqui")
+                return 1
 
-            elif valor == 2:
-                print("BOMBA DETECTADA")
-
-
+        else:
+            print("¡FUERA DEL MAPA!")
 
         return 0
 
@@ -137,6 +177,33 @@ class BoomeVM:
 
         else:
             return int(operando)
+
+    #  LOGICA DE LA BOMBA
+    def detectar_bomba(self):
+
+        if self.Mapa[self.Fila][self.Columna] == self.bomba:
+
+            print(f"¡Has pisado una BOMBA en la posición [{self.Fila},{self.Columna}] ")
+            print("¿Quieres desactivar la bomba?")
+
+            while True:
+                respuesta = input(" 1 = Desactivar bomba, 2 = No desactivar (Pero no le di importancia) ").strip()
+
+                if respuesta == "1":
+                    print("🔧 Bomba desactivada")
+                    self.Mapa[self.Fila][self.Columna] = "0"
+                    break
+
+                elif respuesta == "2":
+                    print(" ¡BOOOOM! La bomba explotó...")
+                    print(" Boome ha muerto :( ")
+                    self.Vivo = False
+                    break
+
+                else:
+                    print(" Opción no válida. Ingresa 1 o 2")
+
+
 
     def fetchDecodeExecute(self, instruccion_parseada):
 
@@ -192,12 +259,12 @@ class BoomeVM:
             destino = instruccion_parseada["destino"]
             direccion = instruccion_parseada["direccion"]
             self.R[destino] = self.leer_sensor(direccion)
-            return 1  # ¡Faltaba este return!
+            return 1
 
         # CASO 5 OPERACION ARITMETICA
         elif tipo == "operacion":
             destino = instruccion_parseada["destino"]
-            # CORRECCIÓN: Necesitas obtener los VALORES, no los strings
+
             op1 = self.obtener_valor(instruccion_parseada["operando1"])
             op2 = self.obtener_valor(instruccion_parseada["operando2"])
             operador = instruccion_parseada["operador"]

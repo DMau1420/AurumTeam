@@ -96,10 +96,16 @@ def asignacion(LStr):
             if regs(A) and (numhex(B) or regs(B)):
                 return { "tipo": "asignacion_simple", "destino": A, "fuente" : B }
 
-        # Caso para sensores r0 = abelardo up
+
         case [A,"=",B,C]:
-            if regs(A) and (sens([B,C])):
-                return {"tipo": "asignacion_sensor", "direccion":C}
+            if regs(A):
+                sensor_info = sens([B,C])
+                if sensor_info:
+                    return {
+                        "tipo": "asignacion_sensor",
+                        "destino": A,
+                        "direccion": C  # Solo guardamos la dirección
+                    }
 
         # Caso para 5 elementos
 

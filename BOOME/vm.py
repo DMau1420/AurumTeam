@@ -26,7 +26,7 @@ class BoomeVM:
         # Crear el mapa 5 X 10
         self.Mapa = [
             ["0", "0", "1", "0", "2", "0", "0", "0", "0", "0"],
-            ["0", "2", "0", "0", "1", "0", "0", "2", "0", "0"],
+            ["1", "2", "0", "0", "1", "0", "0", "2", "0", "0"],
             ["0", "0", "0", "0", "0", "0", "1", "0", "0", "0"],
             ["0", "1", "0", "2", "0", "0", "0", "0", "0", "0"],
             ["0", "0", "0", "0", "0", "2", "0", "1", "0", "0"]
@@ -98,17 +98,17 @@ class BoomeVM:
 
         # izquierda
         if direccion == "ab":
-            fila -= 1
+            col -= 1
 
         # derecha
         elif direccion == "je":
-            fila += 1
+            col += 1
 
         elif direccion == "dw":
-            col -= 1
+            fila -= 1
 
         elif direccion == "up":
-            col += 1
+            fila += 1
 
         # VERIFICAR que la nueva posición está DENTRO del mapa
 

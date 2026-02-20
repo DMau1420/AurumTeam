@@ -1,0 +1,6 @@
+r0 = 0x00
+r1 = 0x03
+r0 = r0 + 0x01
+movd
+salta_dif r0 r1 0x02
+

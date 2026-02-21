@@ -19,8 +19,6 @@ args = parser.parse_args()
 if args.archivo_codigo:
     lineas = args.archivo_codigo.readlines()
     # Hacer copia de las lineas
-    # .rstrip  saltos de línea \n y espacios al final
-    lineas_originales = [l.rstrip() for l in lineas]
     # Limpiar para procesar
     lineas_procesar = []
 
@@ -45,17 +43,20 @@ if args.archivo_codigo:
 
         #  contador=0  idx = 0, linea = 'movi'
         idx, linea = lineas_procesar[contador]
-        print(f"\n--- Ejecutando línea {idx}: {linea} ---")
+        print(f"\n--- Ejecutando línea (0 based)  {idx}: {linea}  ---")
+        print(f"--- Ejecutando línea (1 based)  {idx + 1}: {linea}  ---")
+
 
         # Parsear la linea con anlex
         instruccion = anlex.procesar_linea(linea)
 
         if not instruccion:
-            print(f"ERROR de sintaxis en la linea {idx}: {linea}")
+            print(f"ERROR de sintaxis en la linea  (0 based) {idx}: {linea}")
+            print(f"ERROR de sintaxis en la linea (1 based){idx + 1 }: {linea}")
             break
 
 
-        # 1 podemos ejecutar la siguiente linea sin problemas
+        # True podemos ejecutar la siguiente linea sin problemas
         # Si es difeente de uno nos da el numero de linea a la cual queremos volver o en otras
         # palabras el destino
 
@@ -65,14 +66,12 @@ if args.archivo_codigo:
         print(ovm)
 
         # isinstance(objeto, tipo)
-        # Actualizar el contador
-        if isinstance(siguiente, int):
-            if siguiente != 1:  # Es un salto
-                contador = siguiente  # ¡Cambiamos el flujo!
-            else:
-                contador += 1  # Siguiente instrucción normalmente
+        if isinstance(siguiente, bool):
+            contador += 1  # Siguiente instrucción normalmente
+        # ES UN SATLO
         else:
-            contador += 1
+            contador = siguiente
+
 
         if not ovm.Vivo:
             print("Boome ha muerto :( DETENIENDO EJECUCION")

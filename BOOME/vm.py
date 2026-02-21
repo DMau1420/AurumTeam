@@ -43,10 +43,10 @@ class BoomeVM:
 
     def __str__(self):
 
-        Ret = f"Registros\nR0: {self.R['0']}\n"
-        Ret += f"R1: {self.R['1']} \n"
-        Ret += f"R2: {self.R['2']} \n"
-        Ret += f"R3: {self.R['3']} \n"
+        Ret = f"Registros\nR0: {self.R["0"]}\n"
+        Ret += f"R1: {self.R["1"]} \n"
+        Ret += f"R2: {self.R["2"]} \n"
+        Ret += f"R3: {self.R["3"]} \n"
 
         # [:] Sirve específicamente para crear una copia superficial
         Mapa = [fila[:] for fila in self.Mapa]
@@ -222,12 +222,9 @@ class BoomeVM:
 
         """
         Ejecutar la instrucción y devolver:
-        - 1: si debe continuar con la siguiente línea
+        - True : si debe continuar con la siguiente línea
         - N: si debe saltar a la línea N
         """
-
-        if not self.Vivo:
-            return 1
 
         self.ultimaInstruccion = self.InstruccionActual
         self.InstruccionActual = str(instruccion_parseada)
@@ -247,13 +244,13 @@ class BoomeVM:
             elif accion == "movb":
                 self.movAbajo()
 
-            return 1
+            return True
 
         # CASO 2 SENSOR
         elif tipo == "sensor":
             direccion = instruccion_parseada["direccion"]
             self.leer_sensor(direccion)
-            return 1
+            return True
 
         # CASO 3 ASIGNACION SIMPLE
         elif tipo == "asignacion_simple":
@@ -265,16 +262,17 @@ class BoomeVM:
             else:
                 self.R[destino] = self.obtener_valor(fuente)
 
-            return 1
+
+            return True
 
         # CASO 4 ASIGNACION SENSOR
         elif tipo == "asignacion_sensor":
             destino = instruccion_parseada["destino"]
             direccion = instruccion_parseada["direccion"]
             self.R[destino] = self.leer_sensor(direccion)
-            print( "Este es el valor del registro despues de asignacion sensor", self.R[destino])
-            return 1
+            print( "Este es el valor del registro", destino , "despues de asignacion sensor", self.R[destino])
 
+            return  True
         # CASO 5 OPERACION ARITMETICA
         elif tipo == "operacion":
             destino = instruccion_parseada["destino"]
@@ -288,7 +286,8 @@ class BoomeVM:
             else:  # "-"
                 self.R[destino] = op1 - op2
 
-            return 1
+
+            return True
 
         # CASO 6 SALTO
         elif tipo == "salto":
@@ -303,15 +302,17 @@ class BoomeVM:
             # Evaluar condición
             if condicion == "salta_igual" and op1 == op2:
                 print(f"¡CONDICIÓN VERDADERA! Saltando a línea {destino}")
+                print(f"¡CONDICIÓN VERDADERA! Saltando a línea (1 based) {destino + 1}")
                 return destino
 
             elif condicion == "salta_dif" and op1 != op2:
                 print(f"¡CONDICIÓN VERDADERA! Saltando a línea {destino}")
+                print(f"¡CONDICIÓN VERDADERA! Saltando a línea (1 based) {destino + 1}")
                 return destino
 
             else:
                 print("Condición FALSA, siguiente línea")
-                return 1
+                return  True
 
 
 

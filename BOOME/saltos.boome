@@ -6,10 +6,10 @@ salta_igual r0 r1 0x09 # Si derecha vacía, moverse derecha
 salta_igual r0 r2 0x0B # Si abajo vacío, moverse abajo
 salta_igual r0 r3 0x0D # Si izquierda vacía, moverse izquierda
 mova  # moverse arriba por defecto
-salta_igual r0 r0 0x00
+salta_igual r0 r0 0x01
 movd                   # Moverse derecha
-salta_igual r0 r0 0x00
+salta_igual r0 r0 0x01
 movb                   # Moverse abajo
-salta_igual r0 r0 0x00
+salta_igual r0 r0 0x01
 movi                   # Moverse izquierda
-salta_igual r0 r0 0x00
+salta_igual r0 r0 0x01

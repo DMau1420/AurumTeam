@@ -176,6 +176,7 @@ class BoomeVM:
 
         else:
             print("¡FUERA DEL MAPA!")
+            return 1
 
         return 0
 

@@ -1,13 +1,10 @@
-movb
-movb
-movb
-movb
 r0 = 0x00
-r1 = abelardo je
-salta_dif r1 r0 0x08
-movd
-salta_igual r1 r0 0x05
-salta_igual r1 r0 0x0E
-mova
-salta_dif r1 r0 0x05
 movb
+r1 = abelardo je
+salta_dif r1 r0 0x06
+movd
+salta_igual r1 r0 0x02
+r2 = abelardo dw
+salta_dif r2 r0 0x0E
+movb
+salta_igual r2 r0 0x06

@@ -17,7 +17,7 @@ class BoomeVM:
             "3" (r3) empieza en 3
         """
 
-        self.R = {"0":0,"1":0,"2":0,"3":0}
+        self.R = {"r0":0,"r1":0,"r2":0,"r3":0}
 
         # Posición inicial del robot
         self.Columna = 0
@@ -43,10 +43,10 @@ class BoomeVM:
 
     def __str__(self):
 
-        Ret = f"Registros\nR0: {self.R["0"]}\n"
-        Ret += f"R1: {self.R["1"]} \n"
-        Ret += f"R2: {self.R["2"]} \n"
-        Ret += f"R3: {self.R["3"]} \n"
+        Ret = f"Registros\nR0: {self.R["r0"]}\n"
+        Ret += f"R1: {self.R["r1"]} \n"
+        Ret += f"R2: {self.R["r2"]} \n"
+        Ret += f"R3: {self.R["r3"]} \n"
 
         # [:] Sirve específicamente para crear una copia superficial
         Mapa = [fila[:] for fila in self.Mapa]
@@ -262,8 +262,7 @@ class BoomeVM:
                 self.R[destino] = self.R[fuente]
             else:
                 self.R[destino] = self.obtener_valor(fuente)
-
-
+            
             return True
 
         # CASO 4 ASIGNACION SENSOR
@@ -314,9 +313,3 @@ class BoomeVM:
             else:
                 print("Condición FALSA, siguiente línea")
                 return  True
-
-
-
-
-
-

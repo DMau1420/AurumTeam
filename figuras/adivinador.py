@@ -22,8 +22,18 @@ def adivina():
 
     nodo = "P0"
 
+    print("=========== Piensa en una figura ===========")
+    print("=========== Figuras disponibles ============")
+    print("Círculo, Elipse, Triángulo Equilátero, Triángulo Isósceles,\
+        \nTriángulo Rectángulo, Cuadrado, Rombo, Trapezoide, \
+        \nTrapecio, Rectángulo, Romboide, Pentagono, \
+        \nHexagono, Heptagono, Octagono, Eneagono, \
+        \nDecagono, Endecagono, Dodecagono, Pentagrama, \
+        \nHexagrama \n")
+
     print("================ Adivinador ================")
-    print("Responde las preguntas para adivinar tu pregunta \n")
+    print("Responde las preguntas y adivinare la figura que pensaste \n")
+    
 
     while nodo in preguntas:
         txt_pregunta = preguntas[nodo]
@@ -48,6 +58,7 @@ def adivina():
     print(f"{'='*44}")
     print(f"Tu figura es un {nodo}".center(44))
     print(f"{'='*44}")
+
 
 
 adivina()

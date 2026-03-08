@@ -1,10 +1,6 @@
 import json
 import os
 
-def borrar_consola():
-    if os.name():
-        None
-
 def cargador(archivo):
     try:
         with open(archivo, "r", encoding='utf-8') as f:

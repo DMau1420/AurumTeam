@@ -1,0 +1,65 @@
+{
+  "preguntas": {
+    "P0": "¿Cuántos lados tiene la figura?",
+    "P1": "¿Tiene radio constante (perfectamente redonda)?",
+    "P3": "¿Tiene todos sus lados iguales?",
+    "P3_1": "¿Tiene al menos dos lados iguales?",
+    "P4": "¿Tiene todos sus lados iguales?",
+    "P4_1": "¿Tiene todos sus ángulos iguales (90 grados)?",
+    "P4_2": "¿Tiene al menos un par de lados paralelos?",
+    "P4_3": "¿Tiene dos pares de lados paralelos?",
+    "P10": "¿La figura tiene puntas hacia adentro (cóncava)?",
+    "P12": "¿La figura tiene puntas hacia adentro (cóncava)?"
+  },
+  "grafo": {
+    "P0": {
+      "0": "P1",
+      "3": "P3",
+      "4": "P4",
+      "5": "PENTAGONO",
+      "6": "HEXAGONO",
+      "7": "HEPTAGONO",
+      "8": "OCTAGONO",
+      "9": "ENEAGONO",
+      "10": "P10",
+      "11": "ENDECAGONO",
+      "12": "P12"
+    },
+    "P1": {
+      "S": "CIRCULO",
+      "N": "ELIPSE"
+    },
+    "P3": {
+      "S": "TRIANGULO EQUILATERO",
+      "N": "P3_1"
+    },
+    "P3_1": {
+      "S": "TRIANGULO ISOSCELES",
+      "N": "TRIANGULO ESCALENO"
+    },
+    "P4": {
+      "S": "P4_1",
+      "N": "P4_2"
+    },
+    "P4_1": {
+      "S": "CUADRADO",
+      "N": "ROMBO"
+    },
+    "P4_2": {
+      "S": "P4_3",
+      "N": "TRAPEZOIDE"
+    },
+    "P4_3": {
+      "S": "RECTANGULO (si tiene 90°) o ROMBOIDE",
+      "N": "TRAPECIO"
+    },
+    "P10": {
+      "S": "PENTAGRAMA (ESTRELLA DE 5 PUNTAS)",
+      "N": "DECAGONO"
+    },
+    "P12": {
+      "S": "HEXAGRAMA (ESTRELLA DE 6 PUNTAS)",
+      "N": "DODECAGONO"
+    }
+  }
+}

@@ -12,7 +12,7 @@ def cargador(archivo):
         print("El archivo no es un json")
         return
 
-def main():
+def adivina():
     archivo = cargador("figuras.json")
     if not archivo:
         return
@@ -22,8 +22,7 @@ def main():
 
     nodo = "P0"
 
-
-    print("===== Adivinador =====")
+    print("================ Adivinador ================")
     print("Responde las preguntas para adivinar tu pregunta \n")
 
     while nodo in preguntas:
@@ -45,11 +44,10 @@ def main():
             nodo = opciones[respuesta]
         else:
             print(f"{respuesta} no es una opcion valida. Intenta otra vez \n")
-    print(f"\n {'='*44}")
-    print(f"Tu figura es un {nodo}")
-    print(f"\n {'='*44}")
+
+    print(f"{'='*44}")
+    print(f"Tu figura es un {nodo}".center(44))
+    print(f"{'='*44}")
 
 
-
-
-main()
+adivina()

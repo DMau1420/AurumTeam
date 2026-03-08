@@ -5,9 +5,10 @@
     "P3": "¿Tiene todos sus lados iguales?",
     "P3_1": "¿Tiene al menos dos lados iguales?",
     "P4": "¿Tiene todos sus lados iguales?",
-    "P4_1": "¿Tiene todos sus ángulos iguales (90 grados)?",
+    "P4_1": "¿Tiene todos sus ángulos iguales (90°)?",
     "P4_2": "¿Tiene al menos un par de lados paralelos?",
     "P4_3": "¿Tiene dos pares de lados paralelos?",
+    "P4_4": "¿Tiene todos sus ángulos iguales (90°)?",
     "P10": "¿La figura tiene puntas hacia adentro (cóncava)?",
     "P12": "¿La figura tiene puntas hacia adentro (cóncava)?"
   },
@@ -16,50 +17,54 @@
       "0": "P1",
       "3": "P3",
       "4": "P4",
-      "5": "PENTAGONO",
-      "6": "HEXAGONO",
-      "7": "HEPTAGONO",
-      "8": "OCTAGONO",
-      "9": "ENEAGONO",
+      "5": "Pentágono",
+      "6": "Hexágono",
+      "7": "Heptágono",
+      "8": "Octágono",
+      "9": "Eneágono",
       "10": "P10",
-      "11": "ENDECAGONO",
+      "11": "Endecágono",
       "12": "P12"
     },
     "P1": {
-      "S": "CIRCULO",
-      "N": "ELIPSE"
+      "S": "Círculo",
+      "N": "Elipse"
     },
     "P3": {
-      "S": "TRIANGULO EQUILATERO",
+      "S": "Triángulo Equilátero",
       "N": "P3_1"
     },
     "P3_1": {
-      "S": "TRIANGULO ISOSCELES",
-      "N": "TRIANGULO ESCALENO"
+      "S": "Triángulo Isósceles",
+      "N": "Triángulo Escaleno"
     },
     "P4": {
       "S": "P4_1",
       "N": "P4_2"
     },
     "P4_1": {
-      "S": "CUADRADO",
-      "N": "ROMBO"
+      "S": "Cuadrado",
+      "N": "Rombo"
     },
     "P4_2": {
       "S": "P4_3",
-      "N": "TRAPEZOIDE"
+      "N": "Trapezoide"
     },
     "P4_3": {
-      "S": "RECTANGULO (si tiene 90°) o ROMBOIDE",
-      "N": "TRAPECIO"
+      "S": "P4_4",
+      "N": "Trapecio"
+    },
+    "P4_4": {
+      "S": "Rectángulo",
+      "N": "Romboide"
     },
     "P10": {
-      "S": "PENTAGRAMA (ESTRELLA DE 5 PUNTAS)",
-      "N": "DECAGONO"
+      "S": "Pentagrama (Estrella de 5 puntas)",
+      "N": "Decágono"
     },
     "P12": {
-      "S": "HEXAGRAMA (ESTRELLA DE 6 PUNTAS)",
-      "N": "DODECAGONO"
+      "S": "Hexagrama (Estrella de 6 puntas)",
+      "N": "Dodecágono"
     }
   }
 }

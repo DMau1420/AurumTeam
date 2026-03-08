@@ -1,6 +1,10 @@
 import json
 import os
 
+def borrar_consola():
+    if os.name():
+        None
+
 def cargador(archivo):
     try:
         with open(archivo, "r", encoding='utf-8') as f:
@@ -36,6 +40,11 @@ def main():
 
         respuesta = input("R => ").strip().upper()
 
+        if os.name == "nt":
+            os.system("cls")
+        else:
+            os.system("clear")
+
         if respuesta in opciones:
             nodo = opciones[respuesta]
         else:
@@ -43,5 +52,8 @@ def main():
     print(f"\n {'='*44}")
     print(f"Tu figura es un {nodo}")
     print(f"\n {'='*44}")
+
+
+
 
 main()

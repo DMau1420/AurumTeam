@@ -5,12 +5,12 @@ description = ""
 authors = [
     {name = "DAYN131",email = "mtzhdaniel@gmail.com"}
 ]
-requires-python = ">=3.12,<3.15"
+requires-python = ">=3.10,<3.12"
 dependencies = [
     "ruamel-yaml (>=0.19.1,<0.20.0)",
-    "spacy (>=3.8.11,<4.0.0)"
+    "spacy (>=3.8.11,<4.0.0)",
+    "es-core-news-sm @ https://github.com/explosion/spacy-models/releases/download/es_core_news_sm-3.8.0/es_core_news_sm-3.8.0-py3-none-any.whl"
 ]
-
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

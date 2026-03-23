@@ -33,26 +33,40 @@ def detector_bomba(valor_real):
         return random.choice(vacias_10)
 
 def probabilidad_bayesiana(prob_anterior, mediciones):
-    """
-    Calcula la probabilidad actualizada usando el teorema de Bayes
-    prob_anterior: P(Bomba) antes de las nuevas mediciones
-    mediciones: lista de resultados del detector (0 o 1)
-    """
-    # Tasas del detector
-    # P(medicion=1 | Bomba) = 0.9
-    # P(medicion=1 | NoBomba) = 0.2
-    p_detectar_bomba = 0.9  # Sensibilidad
-    p_falso_positivo = 0.2   # Tasa de falsos positivos
     
+    # ¿QUE PROBABILIDAD CALCULAMOS?
+    # P(Bomba| D+) = ?
+
+    # ¿Como se calcula eso?
+
+    #               P(D+|Bomba)*P(Bomba)
+    # -------------------------------------
+    #     P(D+| Bomba) * P(Bomba) + P(D+| No Bomba) * P(No hay Bomba)
+
+    # Donde  
+    # P(D+|Bomba) =  0.9 Porque hay 9  de cada 10 veces atine que hay bomba dado que si hay una bomba
+    # P(D+ | No hay bomba) =  Porque 2 de cada 10 veces se equivocara  en detectar que es seguro
+    p_detectar_bomba = 0.9
+    p_falso_positivo = 0.2
+    
+    # Esta es la inicial
     prob_actual = prob_anterior
     
     for medicion in mediciones:
         if medicion == 1:  # El detector dijo que hay bomba
             # P(Evidencia | Bomba) = p_detectar_bomba
             # P(Evidencia | NoBomba) = p_falso_positivo
+            
+            numerador  =  (p_detectar_bomba * prob_actual)
+            denominador =  p_detectar_bomba * prob_actual + p_falso_positivo * (1 - prob_actual)
+
+            prob_actual  =  numerador /denominador
+
             prob_actual = (p_detectar_bomba * prob_actual) / (
                 p_detectar_bomba * prob_actual + p_falso_positivo * (1 - prob_actual)
             )
+
+
         else:  # El detector dijo que no hay bomba
             # P(Evidencia | Bomba) = 1 - p_detectar_bomba
             # P(Evidencia | NoBomba) = 1 - p_falso_positivo

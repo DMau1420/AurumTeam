@@ -1,5 +1,6 @@
 import json
 import random
+from colorama import init, Fore, Back, Style
 
 def crear_tablero_limpio():
     tablero = {}
@@ -20,9 +21,6 @@ def plantar_bomba(tablero):
     print(f"Bomba plantada en: {bomba}")
 
 def detector_bomba(valor_real):
-
-    # Si hay bomba: 90% de detectarla (9/10)
-    # Si no hay bomba: 20% de falso positivo (2/10)
 
     vacias_10 = [0, 0, 0, 0, 0, 0, 0, 0, 1, 1]
     bombas_10 = [1, 1, 1, 1, 1, 1, 1, 1, 1, 0]
@@ -46,75 +44,75 @@ def probabilidad_bayesiana(prob_anterior, mediciones):
     # Donde  
     # P(D+|Bomba) =  0.9 Porque hay 9  de cada 10 veces atine que hay bomba dado que si hay una bomba
     # P(D+ | No hay bomba) =  Porque 2 de cada 10 veces se equivocara  en detectar que es seguro
+    # P(Bomba) = 1/50  porque en un inicio  hay 0.02  probs de que haya una bomba en todo el tablero 
+    # P(No hay bomba) = 49/50
+    # Solo en la primera iteracion es 1/50
+
+    # Primera iteracion
+    #               0.9 * 0.02
+    # -------------------------------------  = 0.08 aprox
+    #     (0.9 * 0.02) + (0.2 *0.98)
+
+
     p_detectar_bomba = 0.9
     p_falso_positivo = 0.2
-    
-    # Esta es la inicial
+
     prob_actual = prob_anterior
     
     for medicion in mediciones:
-        if medicion == 1:  # El detector dijo que hay bomba
-            # P(Evidencia | Bomba) = p_detectar_bomba
-            # P(Evidencia | NoBomba) = p_falso_positivo
-            
-            numerador  =  (p_detectar_bomba * prob_actual)
-            denominador =  p_detectar_bomba * prob_actual + p_falso_positivo * (1 - prob_actual)
-
+        if medicion == 1:
+            numerador  =                    (p_detectar_bomba * prob_actual)
+            denominador =  (p_detectar_bomba * prob_actual) + (p_falso_positivo * (1 - prob_actual))
             prob_actual  =  numerador /denominador
 
-            prob_actual = (p_detectar_bomba * prob_actual) / (
-                p_detectar_bomba * prob_actual + p_falso_positivo * (1 - prob_actual)
-            )
-
-
-        else:  # El detector dijo que no hay bomba
-            # P(Evidencia | Bomba) = 1 - p_detectar_bomba
-            # P(Evidencia | NoBomba) = 1 - p_falso_positivo
-            prob_actual = ((1 - p_detectar_bomba) * prob_actual) / (
-                (1 - p_detectar_bomba) * prob_actual + (1 - p_falso_positivo) * (1 - prob_actual)
-            )
-    
     return prob_actual
 
-def verificar_casilla_bayesiana(tablero, casilla, desactivaciones, prob_inicial=1/50):
-    """
-    Verifica una casilla usando inferencia bayesiana con 3 mediciones
-    SOLO si el detector marca positivo al menos una vez
-    """
+def verificar_casilla_bayesiana(tablero, casilla, desactivaciones, prob_inicial):
+    
+    # Verificar que hay en la casilla
     valor_real = tablero[casilla]
     
-    # Tomar 3 mediciones independientes
+    # Tomar las 3 mediciones o detecciones
     mediciones = []
     for _ in range(3):
         medicion = detector_bomba(valor_real)
         mediciones.append(medicion)
     
-    # Verificar si alguna medición fue positiva
-    hubo_positivo = any(m == 1 for m in mediciones)
-    
     print(f"Mediciones en {casilla}: {mediciones}")
     
-    # SOLO calcular probabilidad bayesiana si hubo al menos una medición positiva
-    if hubo_positivo:
+    # Si hubo al menos una detección positiva
+    if 1 in mediciones:
         probabilidad = probabilidad_bayesiana(prob_inicial, mediciones)
-        print(f"Probabilidad bayesiana: {probabilidad:.1%}")
+        print(f"Probabilidad bayesiana calculada: {probabilidad:.1%}")
         
-        # Si hay bomba real y probabilidad > 50%, desactivar si hay desactivaciones disponibles
+        # Caso 1: Hay bomba real Y la probabilidad supera el umbral
         if valor_real == 1 and probabilidad >= 0.5:
             if desactivaciones > 0:
-                print(f"Bomba detectada en {casilla} con {probabilidad:.1%} probabilidad bayesiana")
-                tablero[casilla] = 0  # Desactivar bomba
+                print(f"Bomba detectada en {casilla} con {probabilidad:.1%} — desactivando")
+                tablero[casilla] = 0
                 print(f"Bomba desactivada. Quedan {desactivaciones - 1} desactivaciones")
                 return True, probabilidad, desactivaciones - 1
             else:
-                print(f"Bomba detectada en {casilla} con {probabilidad:.1%} probabilidad bayesiana")
-                print("Sin desactivaciones disponibles")
+                print(f"Bomba detectada en {casilla} con {probabilidad:.1%} pero sin desactivaciones")
+                print(f"Boome pisa la bomba")
                 return False, probabilidad, desactivaciones
+
+        # Caso 2: Hay bomba pero la probabilidad es baja (el detector no fue convincente)
+        elif valor_real == 1 and probabilidad < 0.5:
+            print(f"Bomba en {casilla} pero probabilidad {probabilidad:.1%} no supera el umbral")
+            print(f"Boome pisa la bomba sin saberlo")
+            return False, probabilidad, desactivaciones
+
+        # Caso 3: No hay bomba real (falso positivo del detector)
         else:
-            # No es bomba o probabilidad muy baja
+            print(f"No hay bomba real en {casilla} - fue un falso positivo")
             return True, probabilidad, desactivaciones
+            
     else:
-        # No hubo mediciones positivas, no calculamos probabilidad bayesiana
+        if valor_real == 1:
+            print(f"Detector falló completamente — Boome pisa la bomba en {casilla}")
+            return False, 0, desactivaciones
+        
         print("No hubo detecciones positivas, se asume seguro")
         return True, 0, desactivaciones
 
@@ -149,22 +147,20 @@ def imprimir_tablero(tablero, boome_pos=None):
         for col in letras:
             casilla = f"{col}{fila}"
             if boome_pos == casilla:
-                print("B", end=" ")
+                print(Fore.BLUE + "B" + Style.RESET_ALL, end = " ")
             elif tablero[casilla] == 1:
-                print("1", end=" ")
+                 print(Fore.RED + "1" + Style.RESET_ALL, end = " ")
             else:
                 print("0", end=" ")
         print()
     print()
 
 def mover_boome():
-
     tablero = crear_tablero_limpio()
     plantar_bomba(tablero)
     
     print("=== TABLERO INICIAL ===")
     imprimir_tablero(tablero)
-    
     casilla_actual = "A1"
     direccion = 'derecha'
     movimientos = 0
@@ -172,16 +168,20 @@ def mover_boome():
     posicion_anterior = None
     desactivaciones = 3
     
-    # Probabilidad inicial de encontrar bomba en cualquier casilla
-    prob_inicial = 1/50
+    total_bombas = sum(1 for valor in tablero.values() if valor == 1)
+    total_casillas = len(tablero)  # 50 casillas
+    
+    # Probabilidad inicia real  en la primera iteracion seria 1/50
+    prob_actual = total_bombas / total_casillas
+    print(f"Probabilidad inicial de bomba: {prob_actual:.1%} ({total_bombas} bombas en {total_casillas} casillas)")
     
     while True:
         movimientos += 1
         print(f"\n--- Movimiento {movimientos}: {casilla_actual} ---")
+        print(f"Probabilidad actual (antes de verificar): {prob_actual:.2%}")
         
-        # Verificar usando bayesiana
         sobrevive, probabilidad, desactivaciones = verificar_casilla_bayesiana(
-            tablero, casilla_actual, desactivaciones, prob_inicial
+            tablero, casilla_actual, desactivaciones, prob_actual
         )
         
         if not sobrevive:
@@ -191,7 +191,20 @@ def mover_boome():
             print(f"Casillas recorridas: {len(ruta)}")
             return False
         
-        # Limpiar la casilla anterior (ya no tiene a Boome)
+        if tablero[casilla_actual] != 1 and tablero[casilla_actual] != "B":
+            casillas_revisadas = len(ruta) + 1
+            casillas_restantes = total_casillas - casillas_revisadas
+            
+            bombas_restantes = total_bombas - (3 - desactivaciones)
+            
+            if casillas_restantes > 0:
+                prob_actual = bombas_restantes / casillas_restantes
+                print(f" Actualizacion: {bombas_restantes} bombas en {casillas_restantes} casillas restantes")
+                print(f"Nueva probabilidad: {prob_actual:.2%}")
+            else:
+                prob_actual = 0
+        
+        # Limpiar la casilla anterior
         if posicion_anterior:
             tablero[posicion_anterior] = 0
         
@@ -206,9 +219,10 @@ def mover_boome():
         siguiente, nueva_dir, completado = obtener_siguiente(casilla_actual, direccion)
         
         if completado:
-            print(f"\nBoome completo el tablero")
+            print(f"\n ¡Boome completó el tablero! ")
             print(f"Casillas recorridas: {len(ruta)} de 50")
             print(f"Desactivaciones usadas: {3 - desactivaciones}")
+            print(f"Bombas restantes: {total_bombas - (3 - desactivaciones)}")
             guardar_tablero(tablero)
             return True
         

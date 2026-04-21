@@ -1,0 +1,43 @@
+{
+  "A": [
+    "AA",
+    "AB",
+    "AC"
+  ],
+  "AA": [
+    "AAA",
+    "AAB",
+    "AAC"
+  ],
+  "AAA": [],
+  "AAB": [],
+  "AAC": [],
+  "AB": [
+    "ABA"
+  ],
+  "ABA": [
+    "ABAA",
+    "ABAB"
+  ],
+  "ABAA": [],
+  "ABAB": [],
+  "AC": [
+    "ACA",
+    "ACB"
+  ],
+  "ACA": [
+    "ACAA",
+    "ACAB"
+  ],
+  "ACAA": [],
+  "ACAB": [],
+  "ACB": [
+    "ACBA"
+  ],
+  "ACBA": [
+    "ACAAA",
+    "ACAAB"
+  ],
+  "ACAAA": [],
+  "ACAAB": []
+}

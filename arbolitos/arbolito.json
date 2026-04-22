@@ -1,43 +1,15 @@
 {
-  "A": [
-    "AA",
-    "AB",
-    "AC"
-  ],
-  "AA": [
-    "AAA",
-    "AAB",
-    "AAC"
-  ],
+  "A": ["AA", "AB", "AC"],
+  "AA": ["AAA", "AAB", "AAC"],
+  "AB": ["ABA", "ABB", "ABC"],
+  "AC": ["ACA", "ACB", "ACC"],
   "AAA": [],
   "AAB": [],
   "AAC": [],
-  "AB": [
-    "ABA"
-  ],
-  "ABA": [
-    "ABAA",
-    "ABAB"
-  ],
-  "ABAA": [],
-  "ABAB": [],
-  "AC": [
-    "ACA",
-    "ACB"
-  ],
-  "ACA": [
-    "ACAA",
-    "ACAB"
-  ],
-  "ACAA": [],
-  "ACAB": [],
-  "ACB": [
-    "ACBA"
-  ],
-  "ACBA": [
-    "ACAAA",
-    "ACAAB"
-  ],
-  "ACAAA": [],
-  "ACAAB": []
+  "ABA": [],
+  "ABB": [],
+  "ABC": [],
+  "ACA": [],
+  "ACB": [],
+  "ACC": []
 }

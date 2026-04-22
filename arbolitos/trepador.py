@@ -1,19 +1,18 @@
 import json
+from collections import deque
 
 def cargar_json(nombre):
-    with open(nombre, 'r') as f:
-        return json.load(f)
+    try:
+        with open(nombre, 'r') as f:
+            return json.load(f) 
+    except FileNotFoundError:
+        return {}
 
-arbol = cargar_json('arbolito2.json')
+arbol = cargar_json('arbolito.json')
 
-def trepador(data):
-    pass
+
 
 def trepador_profundo(data, objetivo, nodo_actual=None, visitados=None, ruta=None):
-    """
-    Realiza un recorrido en profundidad (DFS) de forma recursiva.
-    Busca 'objetivo' en el grafo/árbol 'data'.
-    """
     if visitados is None:
         visitados = set()
     if ruta is None:
@@ -23,77 +22,84 @@ def trepador_profundo(data, objetivo, nodo_actual=None, visitados=None, ruta=Non
 
     visitados.add(nodo_actual)
     ruta.append(nodo_actual)
-    print(f"Visitando: {nodo_actual}")
+
+    yield f"Visitando: {nodo_actual}"
 
     if nodo_actual == objetivo:
-        print(f"¡Objetivo '{objetivo}' encontrado!")
-        return ruta
+        yield f"¡Objetivo '{objetivo}' encontrado!"
+        return True
 
     for vecino in data.get(nodo_actual, []):
         if vecino not in visitados:
-            resultado = trepador_profundo(data, objetivo, vecino, visitados, list(ruta))
-            if resultado:
-                return resultado
+            encontrado = yield from trepador_profundo(data, objetivo, vecino, visitados, list(ruta))
+            if encontrado:
+                return True
+    return False
 
-    return None
 
 
 def trepador_ancho(data, objetivo, inicio=None):
-    """
-    Realiza un recorrido en anchura (BFS) de forma iterativa.
-    Busca 'objetivo' en el grafo/árbol 'data'.
-    """
     if inicio is None:
-        # Si no se indica el inicio, tomamos el primer nodo del diccionario
         inicio = next(iter(data))
 
-    from collections import deque
-    # La cola guarda tuplas de (nodo_actual, ruta_hasta_ahora)
     cola = deque([(inicio, [inicio])])
     visitados = set([inicio])
 
     while cola:
         nodo_actual, ruta = cola.popleft()
-        print(f"Visitando: {nodo_actual}")
+        yield f"Visitando: {nodo_actual}"
 
         if nodo_actual == objetivo:
-            print(f"¡Objetivo '{objetivo}' encontrado!")
-            return ruta
+            yield f"¡Objetivo '{objetivo}' encontrado!"
+            return
 
         for vecino in data.get(nodo_actual, []):
             if vecino not in visitados:
                 visitados.add(vecino)
                 cola.append((vecino, ruta + [vecino]))
 
-    return None
-
-
-
-
-trepador_profundo(arbol, "AC")
-print()
-trepador_ancho(arbol, "AC")
 
 
 
 colina = cargar_json('colina.json')
 
 def subir(inicio, fin, pasos):
+    # No se que hace porque no me acuerdo
     pass
 
 
 
 
+G = None
 
+def profundo(objetivo):
+    global G
+    G = trepador_profundo(arbol, objetivo)
 
-'''
+def ancho(objetivo):
+    global G
+    G = trepador_ancho(arbol, objetivo)
+
+print()
+
+print("REPL de Búsqueda Iniciado.")
+print("Comandos útiles:")
+print("- profundo('AC')  # Inicializa trepador profundo hacia 'AC'")
+print("- ancho('AC')     # Inicializa trepador ancho hacia 'AC'")
+print("- next(G)         # Avanza un paso en la búsqueda")
+
 while True:
-    R = input(">")
-    
-    if R == 'salir':
-        break
-    
-    T = eval(R)
-    print(T)
+    try:
+        R = input(">")
+        
+        if R == 'salir':
+            break
+        
+        T = eval(R)
+        
+        if T is not None:
+            print(T)
 
-'''
+    except Exception as e:
+        print("Error!!! ", e)
+

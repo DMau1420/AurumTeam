@@ -53,6 +53,15 @@ def mostrar_mapa_con_ruta(mapa, ruta, inicio, goal):
     plt.tight_layout()
     plt.show()
 
+
+def buscar_objetivo(tablero,target):
+    f = 0
+    while True:
+        if target in tablero[f]:
+            c = tablero[f].index(target)
+            return f,c
+        else:
+            f += 1
     
 def A_Star(boome,goal,mapa,Lista_abierta,Lista_cerrada): 
     f, c = boome['c_nodo']
@@ -105,16 +114,20 @@ def A_Star(boome,goal,mapa,Lista_abierta,Lista_cerrada):
                     Lista_abierta[pos]['h_nodo'] = h_nodo
                     Lista_abierta[pos]['f'] = f_nodo
                     Lista_abierta[pos]['padre'] = boome
-
-
     return vecinos
-
 
 with open('tablero.json', 'r', encoding='utf-8') as file:
     datos = json.load(file)
-    mapa = datos['mapa'] 
-    boome =  {'c_nodo': datos['boome'], 'g_nodo': 0, 'f': 0}
-    goal = tuple(datos['bomba'])
+    mapa = datos['mapa']
+
+    fb, cb = buscar_objetivo(mapa, "B")
+    fg, cg = buscar_objetivo(mapa, "G")
+
+    # Limpiar el mapa
+    mapa = [[0 if celda in ("B", "G") else celda for celda in fila] for fila in mapa]
+
+    boome = {'c_nodo': (fb, cb), 'g_nodo': 0, 'f': 0}
+    goal = (fg, cg)
     Lista_abierta = [boome]
     Lista_cerrada = []
 
@@ -144,7 +157,7 @@ if current['c_nodo'] == goal:
     print(f"Ruta: {camino}")
     print(f"Pasos: {len(camino)-1}")
     print(f"Costo: {current['g_nodo']}")
-    mostrar_mapa_con_ruta(mapa, camino, datos['boome'], goal)
+    mostrar_mapa_con_ruta(mapa, camino, (fb,cb), goal)
 else:
     print("\n=== NO HAY RUTA DISPONIBLE ===")
     print(f"No se pudo llegar a {goal}")

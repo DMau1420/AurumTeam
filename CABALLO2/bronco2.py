@@ -4,21 +4,21 @@ de accesibilidad a través de la regla o algoritmo de Warnsdorff. Este método h
 busca, en cada movimiento, elegir la casilla que tenga el menor número de movimientos de 
 seguimiento posibles (menor accesibilidad) hacia casillas aún no visitadas. 
 """
-tablero =  [
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0]
-]
+
+tablero = [[0]*8 for _ in range(8)]
 
 def imprimir_tablero(tablero):
-    for i in range(len(tablero)):
-        print(tablero[i])
-    print("\n")
+    print("\n  +" + "----+"*8)
+    for fila in tablero:
+        fila_str = "  |"
+        for celda in fila:
+            if celda == 0:
+                fila_str += "    |"
+            else:
+                fila_str += f" {celda:2} |"
+        print(fila_str)
+        print("  +" + "----+"*8)
+    print()
 
 def siguiente_casilla(f,c,tablero):
     movimientos = [(2,1),(2,-1),(-2,1),(-2,-1),(1,2),(1,-2),(-1,2),(-1,-2)]
@@ -26,7 +26,6 @@ def siguiente_casilla(f,c,tablero):
     lista_a = []
 
     # Calcular destinos posibles a partir de la casilla
-    
     for i in range(len(movimientos)):
         f_nueva = f + movimientos[i][0]
         c_nueva = c  + movimientos[i][1]
@@ -40,7 +39,6 @@ def siguiente_casilla(f,c,tablero):
         return None
 
     else:
-        
         # Calcular la accesibilidad dinamica a partir de los destinos posibles
         for candidato in range((len(destinos))):
             contador_ceros = 0
@@ -61,24 +59,24 @@ def siguiente_casilla(f,c,tablero):
 print("\n * * * PROBLEMA DEL RECORRIDO DEL CABALLO * * * \n")
 
 c = input("¿Cual sera la casilla inicial del caballo (por ejemplo 0,0) ? ")
-c = list(c.replace(",", ""))
+c = c.replace(" ", "").split(",")
 tablero[int(c[0])][int(c[1])] = 1
 contador = 1
 f_actual = int(c[0])
 c_actual = int(c[1])
 
-
 while contador < 64:
 
-    imprimir_tablero(tablero)
-    f_sig,c_sig = siguiente_casilla(f_actual,c_actual,tablero)
+    resultado = siguiente_casilla(f_actual, c_actual, tablero)
 
-    if None:
+    if resultado is None:
         print("No se puede completar el recorrido")
         break
     else:
+        f_sig, c_sig = resultado
         contador += 1
         tablero[f_sig][c_sig] = contador
-        f_actual,c_actual = f_sig,c_sig
+        f_actual, c_actual = f_sig, c_sig
+
 
 imprimir_tablero(tablero)

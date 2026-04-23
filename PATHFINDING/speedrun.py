@@ -106,7 +106,6 @@ def A_Star(boome,goal,mapa,Lista_abierta,Lista_cerrada):
                     if nodo['c_nodo'] == (f_nueva, c_nueva):
                         break
 
-
                 g_nodo_anterior = Lista_abierta[pos]['g_nodo']
                 
                 if g_nodo < g_nodo_anterior:
@@ -143,7 +142,6 @@ while Lista_abierta:
     vecinos = A_Star(current, goal, mapa, Lista_abierta, Lista_cerrada)
     Lista_abierta.extend(vecinos)
     Lista_abierta = sorted(Lista_abierta, key=lambda x: x['f'])
-
 
 if current['c_nodo'] == goal:
     print("\n=== BOMBA ENCONTRADA ===")

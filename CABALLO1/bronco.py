@@ -22,9 +22,17 @@ def giro(f,c,dir):
 
 
 def imprimir_tablero(tablero):
-    for i in range(len(tablero)):
-        print(tablero[i])
-    print("\n")
+    ancho = 6
+    separador = "  +" + ("-" * ancho + "+") * 3
+    print(separador)
+    for fila in tablero:
+        fila_str = "  |"
+        for celda in fila:
+            texto = " " if celda == "0" else celda
+            fila_str += texto.center(ancho) + "|"
+        print(fila_str)
+        print(separador)
+    print()
 
 def buscar_caballo(tablero,target):
     f = 0

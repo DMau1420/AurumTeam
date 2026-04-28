@@ -23,15 +23,15 @@ def trepador_profundo(data, objetivo, nodo_actual=None, visitados=None, ruta=Non
     visitados.add(nodo_actual)
     ruta.append(nodo_actual)
 
-    yield f"Visitando: {nodo_actual}"
+    print(f"Visitando: {nodo_actual}")
 
     if nodo_actual == objetivo:
-        yield f"¡Objetivo '{objetivo}' encontrado!"
+        print(f"¡Objetivo '{objetivo}' encontrado!")
         return True
 
     for vecino in data.get(nodo_actual, []):
         if vecino not in visitados:
-            encontrado = yield from trepador_profundo(data, objetivo, vecino, visitados, list(ruta))
+            encontrado = trepador_profundo(data, objetivo, vecino, visitados, list(ruta))
             if encontrado:
                 return True
     return False
@@ -47,10 +47,10 @@ def trepador_ancho(data, objetivo, inicio=None):
 
     while cola:
         nodo_actual, ruta = cola.popleft()
-        yield f"Visitando: {nodo_actual}"
+        print(f"Visitando: {nodo_actual}")
 
         if nodo_actual == objetivo:
-            yield f"¡Objetivo '{objetivo}' encontrado!"
+            print(f"¡Objetivo '{objetivo}' encontrado!")
             return
 
         for vecino in data.get(nodo_actual, []):
@@ -63,9 +63,43 @@ def trepador_ancho(data, objetivo, inicio=None):
 
 colina = cargar_json('colina.json')
 
-def subir(inicio, fin, pasos):
-    # No se que hace porque no me acuerdo
-    pass
+def subir(inicio, fin):
+    caminos = []
+    
+    def explorar(nodo, camino_actual, costo_actual, visitados):
+        if nodo == fin:
+            caminos.append((camino_actual, costo_actual))
+            return
+            
+        visitados.add(nodo)
+        
+        # En la escalada de colina (Hill Climbing) se prefiere el vecino con menor costo.
+        # Aquí ordenamos los vecinos por peso para explorarlos en ese orden.
+        vecinos = sorted(colina.get(nodo, {}).items(), key=lambda x: x[1])
+        
+        for vecino, peso in vecinos:
+            if vecino not in visitados:
+                explorar(vecino, camino_actual + [vecino], costo_actual + peso, set(visitados))
+                
+    explorar(inicio, [inicio], 0, set())
+    
+    if not caminos:
+        print("No se encontraron caminos posibles.")
+        return []
+        
+    # Ordenamos todos los caminos encontrados por su costo total para sacar los dos mejores
+    caminos.sort(key=lambda x: x[1])
+    
+    mejor_camino = caminos[0]
+    print(f"Camino más corto: \n{' -> '.join(mejor_camino[0])} | Peso total: {mejor_camino[1]} \n")
+    
+    if len(caminos) > 1:
+        segundo_camino = caminos[1]
+        print(f"Segundo camino más corto: \n{' -> '.join(segundo_camino[0])} | Peso total: {segundo_camino[1]} \n")
+    else:
+        print("No hay un segundo camino para comparar.")
+        
+    return caminos[:2]
 
 
 
@@ -80,26 +114,27 @@ def ancho(objetivo):
     global G
     G = trepador_ancho(arbol, objetivo)
 
-print()
 
-print("REPL de Búsqueda Iniciado.")
-print("Comandos útiles:")
-print("- profundo('AC')  # Inicializa trepador profundo hacia 'AC'")
-print("- ancho('AC')     # Inicializa trepador ancho hacia 'AC'")
-print("- next(G)         # Avanza un paso en la búsqueda")
+if __name__ == "__main__":
+    print("REPL de Búsqueda Iniciado.")
+    print("Comandos útiles:")
+    print("- profundo('AC')  # Ejecuta trepador profundo hacia 'AC'")
+    print("- ancho('AC')     # Ejecuta trepador ancho hacia 'AC'")
+    print("- subir('A', 'J') # Encuentra el camino más corto en el grafo de colina")
 
-while True:
-    try:
-        R = input(">")
-        
-        if R == 'salir':
-            break
-        
-        T = eval(R)
-        
-        if T is not None:
-            print(T)
+    while True:
+        try:
+            print()
+            R = input(">")
+            
+            if R == 'salir':
+                break
+            
+            T = eval(R)
+            
+            if T is not None:
+                print(T)
 
-    except Exception as e:
-        print("Error!!! ", e)
+        except Exception as e:
+            print("Error!!! ", e)
 

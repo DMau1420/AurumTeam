@@ -63,7 +63,7 @@ def trepador_ancho(data, objetivo, inicio=None):
 
 colina = cargar_json('colina.json')
 
-def subir(inicio, fin):
+def subir_colina(inicio, fin):
     caminos = []
     
     def explorar(nodo, camino_actual, costo_actual, visitados):
@@ -73,8 +73,7 @@ def subir(inicio, fin):
             
         visitados.add(nodo)
         
-        # En la escalada de colina (Hill Climbing) se prefiere el vecino con menor costo.
-        # Aquí ordenamos los vecinos por peso para explorarlos en ese orden.
+        # ordena los nodos por peso
         vecinos = sorted(colina.get(nodo, {}).items(), key=lambda x: x[1])
         
         for vecino, peso in vecinos:
@@ -118,9 +117,9 @@ def ancho(objetivo):
 if __name__ == "__main__":
     print("REPL de Búsqueda Iniciado.")
     print("Comandos útiles:")
-    print("- profundo('AC')  # Ejecuta trepador profundo hacia 'AC'")
-    print("- ancho('AC')     # Ejecuta trepador ancho hacia 'AC'")
-    print("- subir('A', 'J') # Encuentra el camino más corto en el grafo de colina")
+    print("- profundo('AC')  # Ejecuta busqueda en profundidad hacia 'AC'")
+    print("- ancho('AC')     # Ejecuta busqueda en anchura hacia 'AC'")
+    print("- subir_colina('A', 'J') # Encuentra el camino más corto en el grafo de colina")
 
     while True:
         try:

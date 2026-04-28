@@ -6,7 +6,8 @@ def cargar_json(nombre):
         with open(nombre, 'r') as f:
             return json.load(f) 
     except FileNotFoundError:
-        return {}
+        print("Error, archivo no encontrado")
+        return {} 
 
 arbol = cargar_json('arbolito.json')
 

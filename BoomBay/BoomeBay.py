@@ -1,14 +1,17 @@
 import json
 import random
 from colorama import init, Fore, Back, Style
+import os 
 
-def crear_tablero_limpio():
-    tablero = {}
-    letras = ['A', 'B', 'C', 'D', 'E']
-    for fila in range(1, 11):
-        for col in letras:
-            tablero[f"{col}{fila}"] = 0
-    return tablero
+def cargar_tablero(ruta='tablero.json'):
+    
+    if not os.path.exists(ruta):
+        print(f" No se encontro el archivo")
+    else:
+        with open(ruta, 'r', encoding='utf-8') as archivo:
+            tablero = json.load(archivo)
+        return tablero
+
 
 def guardar_tablero(tablero):
     with open('tablero.json', 'w', encoding='utf-8') as archivo:
@@ -105,7 +108,6 @@ def verificar_casilla_bayesiana(tablero, casilla, desactivaciones, prob_inicial)
 
         # Caso 3: No hay bomba real (falso positivo del detector)
         else:
-            print(f"No hay bomba real en {casilla} - fue un falso positivo")
             return True, probabilidad, desactivaciones
             
     else:
@@ -149,14 +151,14 @@ def imprimir_tablero(tablero, boome_pos=None):
             if boome_pos == casilla:
                 print(Fore.BLUE + "B" + Style.RESET_ALL, end = " ")
             elif tablero[casilla] == 1:
-                 print(Fore.RED + "1" + Style.RESET_ALL, end = " ")
+                print(Fore.RED + "1" + Style.RESET_ALL, end = " ")
             else:
                 print("0", end=" ")
         print()
     print()
 
 def mover_boome():
-    tablero = crear_tablero_limpio()
+    tablero = cargar_tablero()
     plantar_bomba(tablero)
     
     print("=== TABLERO INICIAL ===")

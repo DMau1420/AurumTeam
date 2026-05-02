@@ -52,54 +52,64 @@ def trepador_ancho(data, objetivo, inicio=None):
 
         if nodo_actual == objetivo:
             print(f"¡Objetivo '{objetivo}' encontrado!")
-            return
+            return True
 
         for vecino in data.get(nodo_actual, []):
             if vecino not in visitados:
                 visitados.add(vecino)
                 cola.append((vecino, ruta + [vecino]))
-
-
+    return False
 
 
 colina = cargar_json('colina.json')
 
 def subir_colina(inicio, fin):
-    caminos = []
-    
-    def explorar(nodo, camino_actual, costo_actual, visitados):
-        if nodo == fin:
-            caminos.append((camino_actual, costo_actual))
-            return
-            
-        visitados.add(nodo)
+    memoria = 3
+    if inicio == fin:
+        print(f"\n¡Objetivo '{fin}' encontrado en el inicio!")
+        return [inicio]
+
+    # Cada candidato guarda: (costo_acumulado, nodo_actual, camino_recorrido, nodos_visitados)
+    candidatos = [(0, inicio, [inicio], {inicio})]
+    mejor_costo = float('inf')
+    mejor_camino = []
+
+    while candidatos:
+        print(f"Nodos en memoria: {[c[1] for c in candidatos]}")
         
-        # ordena los nodos por peso
-        vecinos = sorted(colina.get(nodo, {}).items(), key=lambda x: x[1])
+        siguientes = []
+        for costo, nodo, camino, visitados in candidatos:
+            # Explorar los vecinos del nodo actual
+            for vecino, peso in colina.get(nodo, {}).items():
+                nuevo_costo = costo + peso
+                nuevo_camino = camino + [vecino]
+
+                # Si encontramos el objetivo, actualizamos el mejor camino si es más corto
+                if vecino == fin:
+                    if nuevo_costo < mejor_costo:
+                        mejor_costo = nuevo_costo
+                        mejor_camino = nuevo_camino
+                    continue
+
+                # Agregamos vecinos si no están visitados y aún tienen posibilidad de ser el mejor camino
+                if vecino not in visitados and nuevo_costo < mejor_costo:
+                    nuevos_visitados = visitados.copy()
+                    nuevos_visitados.add(vecino)
+                    siguientes.append((nuevo_costo, vecino, nuevo_camino, nuevos_visitados))
         
-        for vecino, peso in vecinos:
-            if vecino not in visitados:
-                explorar(vecino, camino_actual + [vecino], costo_actual + peso, set(visitados))
-                
-    explorar(inicio, [inicio], 0, set())
-    
-    if not caminos:
-        print("No se encontraron caminos posibles.")
-        return []
+        # Ordenamos las opciones por el menor costo (ascendente)
+        siguientes.sort(key=lambda x: x[0])
         
-    # Ordenamos todos los caminos encontrados por su costo total para sacar los dos mejores
-    caminos.sort(key=lambda x: x[1])
-    
-    mejor_camino = caminos[0]
-    print(f"Camino más corto: \n{' -> '.join(mejor_camino[0])} | Peso total: {mejor_camino[1]} \n")
-    
-    if len(caminos) > 1:
-        segundo_camino = caminos[1]
-        print(f"Segundo camino más corto: \n{' -> '.join(segundo_camino[0])} | Peso total: {segundo_camino[1]} \n")
-    else:
-        print("No hay un segundo camino para comparar.")
-        
-    return caminos[:2]
+        # Conservamos solo las mejores opciones según el límite de memoria
+        candidatos = siguientes[:memoria]
+
+    if mejor_camino:
+        print(f"\n¡Objetivo '{fin}' encontrado!")
+        print(f"Camino: {' -> '.join(mejor_camino)} | Costo total: {mejor_costo}\n")
+        return mejor_camino
+
+    print("No se encontró un camino posible.")
+    return []
 
 
 
